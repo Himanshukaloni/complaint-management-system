@@ -7,13 +7,12 @@
 
 <style>
 :root{
-  /* ===== ADMIN GREEN THEME ===== */
   --bg-dark:#0f1724;
   --panel-dark:#0b1220;
   --card-dark:#0f1724;
   --muted-dark:#9aa4bf;
-  --accent:#1a825f;          /* GREEN */
-  --accent-2:#22c55e;        /* LIGHT GREEN */
+  --accent:#1a825f;
+  --accent-2:#22c55e;
 
   --bg-light:#f7fafc;
   --panel-light:#ffffff;
@@ -35,165 +34,104 @@
 }
 
 *{box-sizing:border-box}
-html,body{height:100%}
-
 body{
   margin:0;
   font-family:Inter,system-ui;
   background:
-    radial-gradient(1200px 600px at 10% 10%, rgba(26,130,95,0.08), transparent 8%),
-    radial-gradient(1000px 500px at 90% 90%, rgba(34,197,94,0.05), transparent 8%),
+    radial-gradient(1200px 600px at 10% 10%, rgba(26,130,95,.08), transparent 8%),
+    radial-gradient(1000px 500px at 90% 90%, rgba(34,197,94,.05), transparent 8%),
     var(--bg);
   color:var(--muted);
-  padding:28px;
-  transition:.3s;
+  padding:24px;
 }
 
-/* ===== LAYOUT ===== */
+/* LAYOUT */
 .layout{
   display:grid;
   grid-template-columns:260px 1fr;
   gap:20px;
-  min-height:calc(100vh - 56px);
 }
 
-/* ===== SIDEBAR ===== */
+/* SIDEBAR */
 aside{
-  background:linear-gradient(180deg,var(--accent),color-mix(in srgb,var(--accent) 60%,black 6%));
+  background:linear-gradient(180deg,var(--accent),#0e5d45);
   padding:22px;
-  border-radius:12px;
+  border-radius:14px;
   color:#fff;
 }
-aside .logo{
-  font-size:18px;
-  font-weight:800;
-  margin-bottom:16px;
-}
-aside nav a{
+aside h2{margin-bottom:16px}
+aside a{
   display:block;
+  color:#fff;
+  text-decoration:none;
   padding:12px;
   border-radius:10px;
   margin-bottom:8px;
-  color:#fff;
-  text-decoration:none;
-  transition:.2s;
 }
-aside nav a:hover{
-  transform:translateY(-4px);
-  background:rgba(255,255,255,.2);
-}
+aside a:hover{background:rgba(255,255,255,.2)}
 
-/* ===== MAIN ===== */
-main{padding:28px}
+/* MAIN */
+main{padding:10px}
 
-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  margin-bottom:18px;
-}
-header h1{
-  margin:0;
-  color:var(--accent);
-}
-header p{
-  margin:4px 0 0;
-  color:var(--muted);
-}
-
-/* ===== STATS ===== */
+/* STATS */
 .stats{
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:16px;
-  margin-bottom:18px;
+  margin-bottom:20px;
 }
 .stat{
-  padding:22px;
+  padding:20px;
   border-radius:14px;
-  min-height:96px;
-  position:relative;
-  overflow:hidden;
-  transition:.2s;
+  background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);
+  box-shadow:0 10px 30px rgba(0,0,0,.4);
 }
-[data-theme="dark"] .stat{
-  background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-  box-shadow:0 10px 30px rgba(0,0,0,.5);
-}
-[data-theme="light"] .stat{
-  background:#fff;
-  box-shadow:0 6px 18px rgba(0,0,0,.08);
-}
-.stat::before{
-  content:"";
-  position:absolute;
-  left:0;top:0;bottom:0;
-  width:6px;
-  background:linear-gradient(180deg,var(--accent),var(--accent-2));
-  transform:translateX(-6px);
-  transition:.2s;
-}
-.stat:hover{transform:translateY(-6px)}
-.stat:hover::before{transform:translateX(0)}
-.stat .label{font-size:13px;color:var(--muted);font-weight:600}
+.stat .label{font-size:13px;color:var(--muted)}
 .stat .value{font-size:30px;font-weight:800;color:#fff}
-[data-theme="light"] .stat .value{color:#000}
 
-/* ===== SECTIONS ===== */
+/* TABLE */
 .card{
   background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);
   padding:18px;
-  border-radius:12px;
+  border-radius:14px;
 }
-.card h3{margin-top:0;color:var(--accent)}
-
-/* ===== TABLE ===== */
-.table-wrap{overflow-x:auto;margin-top:12px}
 table{
   width:100%;
-  min-width:650px;
   border-collapse:collapse;
 }
 th,td{
   padding:12px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  font-size:14px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  text-align:left;
 }
 th{color:var(--muted)}
 
-/* ===== BUTTONS ===== */
-.btn{padding:6px 12px;border-radius:8px;border:none;font-weight:600;cursor:pointer}
+/* BUTTONS */
+.btn{padding:6px 12px;border:none;border-radius:8px;font-weight:600;cursor:pointer}
 .btn-reply{background:#22c55e;color:#fff}
 .btn-approve{background:#16a34a;color:#fff}
 .btn-reject{background:#dc2626;color:#fff}
 
-/* ===== STATUS ===== */
-.status-select{
-  padding:6px 14px;
-  border-radius:20px;
-  background:transparent;
-  color:inherit;
-  border:1px solid rgba(255,255,255,.3);
-}
+/* STATUS */
+select{padding:6px 12px;border-radius:20px;background:transparent;color:inherit}
 
-/* ===== MODAL ===== */
+/* MODAL */
 .modal{
   position:fixed;inset:0;
   background:rgba(0,0,0,.6);
-  display:none;justify-content:center;align-items:center;
+  display:none;
+  justify-content:center;
+  align-items:center;
 }
 .modal.active{display:flex}
 .modal-box{
   background:#fff;color:#000;
-  padding:20px;border-radius:12px;
+  padding:20px;
+  border-radius:12px;
   width:360px;
 }
-.modal-box textarea{width:100%;height:100px;margin-top:10px}
-.modal-btn{margin-top:12px;padding:10px 14px;border-radius:8px;border:none;cursor:pointer}
-.cancel{background:#ddd}
-.send{background:#16a34a;color:#fff}
 
-/* ===== THEME TOGGLE ===== */
+/* TOGGLE */
 .theme-toggle{
   position:fixed;right:14px;top:14px;
   width:44px;height:28px;
@@ -202,15 +140,17 @@ th{color:var(--muted)}
   padding:4px;
   cursor:pointer;
 }
-.theme-dot{width:20px;height:20px;border-radius:50%;background:#fff;transition:.25s}
+.theme-dot{
+  width:20px;height:20px;border-radius:50%;
+  background:#fff;transition:.25s;
+}
 [data-theme="light"] .theme-dot{transform:translateX(16px)}
 
-/* ===== RESPONSIVE ===== */
-@media(max-width:1100px){
+@media(max-width:900px){
   .layout{grid-template-columns:1fr}
   .stats{grid-template-columns:repeat(2,1fr)}
 }
-@media(max-width:640px){
+@media(max-width:500px){
   .stats{grid-template-columns:1fr}
 }
 </style>
@@ -221,70 +161,61 @@ th{color:var(--muted)}
 <div class="theme-toggle" id="themeToggle"><div class="theme-dot"></div></div>
 
 <div class="layout">
-  <aside>
-    <div class="logo">CMS Admin</div>
-    <nav>
-      <a href="#" id="navDashboard">Dashboard</a>
-      <a href="#" id="navComplaints">All Complaints</a>
-      <a href="#" id="navApprove">Approve Admins</a>
-      <a href="#" id="logout">Logout</a>
-    </nav>
-  </aside>
 
-  <main>
-    <header>
-      <div>
-        <h1>Admin Dashboard</h1>
-        <p>Manage complaints & approvals</p>
-      </div>
-    </header>
+<aside>
+  <h2>CMS Admin</h2>
+  <a href="#" id="navDash">Dashboard</a>
+  <a href="#" id="navComp">All Complaints</a>
+  <a href="#" id="navAdmin">Approve Admins</a>
+  <a href="#" id="logout">Logout</a>
+</aside>
 
-    <section class="stats">
-      <div class="stat"><div class="label">Total</div><div class="value" id="statTotal">0</div></div>
-      <div class="stat"><div class="label">Pending</div><div class="value" id="statPending">0</div></div>
-      <div class="stat"><div class="label">In Progress</div><div class="value" id="statProg">0</div></div>
-      <div class="stat"><div class="label">Resolved</div><div class="value" id="statRes">0</div></div>
-    </section>
+<main>
+  <h1 style="color:var(--accent)">Admin Dashboard</h1>
+  <p>Manage complaints & approvals</p>
 
-    <section class="card" id="complaintSection" style="display:none">
-      <h3>All Complaints</h3>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>ID</th><th>Student</th><th>Title</th><th>Status</th><th>Action</th></tr>
-          </thead>
-          <tbody id="complaintsTable"></tbody>
-        </table>
-      </div>
-    </section>
+  <div class="stats">
+    <div class="stat"><div class="label">Total</div><div class="value" id="statTotal">0</div></div>
+    <div class="stat"><div class="label">Pending</div><div class="value" id="statPending">0</div></div>
+    <div class="stat"><div class="label">In Progress</div><div class="value" id="statProg">0</div></div>
+    <div class="stat"><div class="label">Resolved</div><div class="value" id="statRes">0</div></div>
+  </div>
 
-    <section class="card" id="approveSection" style="display:none">
-      <h3>Pending Admins</h3>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Name</th><th>Email</th><th>Actions</th></tr></thead>
-          <tbody id="pendingTable"></tbody>
-        </table>
-      </div>
-    </section>
-  </main>
+  <section class="card" id="complaintsSec" style="display:none">
+    <h3>All Complaints</h3>
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Student</th><th>Title</th><th>Status</th><th>Action</th></tr>
+      </thead>
+      <tbody id="complaintsTable"></tbody>
+    </table>
+  </section>
+
+  <section class="card" id="adminsSec" style="display:none">
+    <h3>Pending Admins</h3>
+    <table>
+      <thead><tr><th>Name</th><th>Email</th><th>Action</th></tr></thead>
+      <tbody id="pendingTable"></tbody>
+    </table>
+  </section>
+</main>
 </div>
 
-<!-- MODAL -->
 <div class="modal" id="replyModal">
   <div class="modal-box">
     <h3>Reply</h3>
-    <textarea id="replyTxt"></textarea>
-    <button class="modal-btn cancel" onclick="closeReply()">Cancel</button>
-    <button class="modal-btn send" onclick="sendReply()">Send</button>
+    <textarea id="replyTxt" style="width:100%;height:90px"></textarea>
+    <br><br>
+    <button onclick="closeReply()">Cancel</button>
+    <button class="btn btn-reply" onclick="sendReply()">Send</button>
   </div>
 </div>
 
 <script>
-const API = "https://cms-backend-production-d80a.up.railway.app";
-const token = localStorage.getItem("cms_token");
-const role  = localStorage.getItem("cms_role");
-if(!token || role!=="admin"){location.href="login.html"}
+const API="https://cms-backend-production-d80a.up.railway.app";
+const token=localStorage.getItem("cms_token");
+const role=localStorage.getItem("cms_role");
+if(!token||role!=="admin")location.href="login.html";
 
 const headers=()=>({
   "Content-Type":"application/json",
@@ -292,68 +223,49 @@ const headers=()=>({
 });
 
 /* THEME */
-document.body.setAttribute("data-theme",localStorage.getItem("cms_theme")||"dark");
+document.body.dataset.theme=localStorage.getItem("cms_theme")||"dark";
 themeToggle.onclick=()=>{
-  const t=document.body.getAttribute("data-theme")==="dark"?"light":"dark";
-  document.body.setAttribute("data-theme",t);
+  const t=document.body.dataset.theme==="dark"?"light":"dark";
+  document.body.dataset.theme=t;
   localStorage.setItem("cms_theme",t);
 };
 
 /* NAV */
 logout.onclick=()=>{localStorage.clear();location.href="login.html"};
-navDashboard.onclick=()=>show("dashboard");
-navComplaints.onclick=()=>{show("complaints");loadComplaints()};
-navApprove.onclick=()=>{show("approve");loadAdmins()};
+navDash.onclick=()=>show();
+navComp.onclick=()=>{show("complaints");loadComplaints()};
+navAdmin.onclick=()=>{show("admins");loadAdmins()};
 
-function show(s){
-  complaintSection.style.display=s==="complaints"?"block":"none";
-  approveSection.style.display=s==="approve"?"block":"none";
+function show(sec){
+  complaintsSec.style.display=sec==="complaints"?"block":"none";
+  adminsSec.style.display=sec==="admins"?"block":"none";
 }
 
-/* COMPLAINTS */
+/* LOAD COMPLAINTS */
 async function loadComplaints(){
-  const res = await fetch(API + "/admin/complaints", {
-    headers: headers()
+  const res=await fetch(API+"/admin/complaints",{headers:headers()});
+  const list=await res.json();
+  complaintsTable.innerHTML="";
+  list.forEach(c=>{
+    complaintsTable.innerHTML+=`
+    <tr>
+      <td>${c._id.slice(-6)}</td>
+      <td>${c.user_id?`${c.user_id.first_name} ${c.user_id.last_name}`:"Unknown"}</td>
+      <td>${c.title}</td>
+      <td>
+        <select onchange="updateStatus('${c._id}',this.value)">
+          <option ${c.status==="pending"?"selected":""}>pending</option>
+          <option ${c.status==="in_progress"?"selected":""}>in_progress</option>
+          <option ${c.status==="resolved"?"selected":""}>resolved</option>
+        </select>
+      </td>
+      <td><button class="btn btn-reply" onclick="openReply('${c._id}')">Reply</button></td>
+    </tr>`;
   });
-
-  const list = await res.json();
-  complaintsTable.innerHTML = "";
-
-  list.forEach(c => {
-    complaintsTable.innerHTML += `
-      <tr>
-        <td>${c._id.slice(-6)}</td>
-
-        <td>
-          ${c.user_id 
-            ? `${c.user_id.first_name} ${c.user_id.last_name}`
-            : "<em>Unknown User</em>"}
-        </td>
-
-        <td>${c.title}</td>
-
-        <td>
-          <select class="status-select ${c.status}"
-            onchange="updateStatus('${c._id}', this.value)">
-            <option value="pending" ${c.status==="pending"?"selected":""}>Pending</option>
-            <option value="in_progress" ${c.status==="in_progress"?"selected":""}>In Progress</option>
-            <option value="resolved" ${c.status==="resolved"?"selected":""}>Resolved</option>
-          </select>
-        </td>
-
-        <td>
-          <button class="btn btn-reply"
-            onclick="openReply('${c._id}')">
-            Reply
-          </button>
-        </td>
-      </tr>
-    `;
-  });
-
   updateStats(list);
 }
 
+function updateStats(list){
   statTotal.textContent=list.length;
   statPending.textContent=list.filter(x=>x.status==="pending").length;
   statProg.textContent=list.filter(x=>x.status==="in_progress").length;
@@ -386,18 +298,25 @@ async function loadAdmins(){
   pendingTable.innerHTML="";
   list.forEach(u=>{
     pendingTable.innerHTML+=`
-      <tr>
-        <td>${u.first_name} ${u.last_name}</td>
-        <td>${u.email}</td>
-        <td>
-          <button class="btn btn-approve" onclick="approve('${u._id}')">Approve</button>
-          <button class="btn btn-reject" onclick="reject('${u._id}')">Reject</button>
-        </td>
-      </tr>`;
+    <tr>
+      <td>${u.first_name} ${u.last_name}</td>
+      <td>${u.email}</td>
+      <td>
+        <button class="btn btn-approve" onclick="approve('${u._id}')">Approve</button>
+        <button class="btn btn-reject" onclick="reject('${u._id}')">Reject</button>
+      </td>
+    </tr>`;
   });
 }
-async function approve(id){await fetch(`${API}/admin/approve-admin/${id}`,{method:"PUT",headers:headers()});loadAdmins()}
-async function reject(id){await fetch(`${API}/admin/reject-admin/${id}`,{method:"DELETE",headers:headers()});loadAdmins()}
+
+async function approve(id){
+  await fetch(`${API}/admin/approve-admin/${id}`,{method:"PUT",headers:headers()});
+  loadAdmins();
+}
+async function reject(id){
+  await fetch(`${API}/admin/reject-admin/${id}`,{method:"DELETE",headers:headers()});
+  loadAdmins();
+}
 
 /* INIT */
 loadComplaints();
