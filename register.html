@@ -128,13 +128,16 @@ input, select{
 
 <script>
 const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
-  const themeToggle = document.getElementById("themeToggle");
 
-// load saved theme
+/* 🔥 WAKE BACKEND */
+fetch(API_BASE).catch(() => {});
+
+/* 🌗 THEME TOGGLE (CORRECT) */
+const themeToggle = document.getElementById("themeToggle");
+
 const savedTheme = localStorage.getItem("cms_theme") || "dark";
 document.body.setAttribute("data-theme", savedTheme);
 
-// toggle theme
 themeToggle.addEventListener("click", () => {
   const current = document.body.getAttribute("data-theme");
   const next = current === "dark" ? "light" : "dark";
@@ -142,19 +145,16 @@ themeToggle.addEventListener("click", () => {
   localStorage.setItem("cms_theme", next);
 });
 
-/* 🔥 Wake backend immediately (mobile safe) */
-fetch(API_BASE).catch(() => {});
-
-/* REGISTER HANDLER */
+/* 🧾 REGISTER HANDLER */
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const first_name = document.getElementById("firstName").value.trim();
-  const last_name  = document.getElementById("lastName").value.trim();
-  const email      = document.getElementById("email").value.trim();
-  const role       = document.getElementById("role").value;
-  const password   = document.getElementById("password").value;
-  const confirm    = document.getElementById("confirm").value;
+  const first_name = firstName.value.trim();
+  const last_name  = lastName.value.trim();
+  const email      = email.value.trim();
+  const role       = role.value;
+  const password   = password.value;
+  const confirm    = confirm.value;
 
   if (!first_name || !last_name || !email || !password) {
     alert("All fields required");
@@ -167,21 +167,12 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
   }
 
   try {
-    // 🔥 Wake backend again (important for Railway sleep)
     await fetch(API_BASE);
 
     const res = await fetch(`${API_BASE}/auth/register`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        first_name,
-        last_name,
-        email,
-        password,
-        role
-      })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ first_name, last_name, email, password, role })
     });
 
     const data = await res.json();
@@ -200,11 +191,11 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     location.href = "login.html";
 
   } catch (err) {
-    console.error(err);
-    alert("Backend waking up… try again in 3 seconds");
+    alert("Backend waking up… try again");
   }
 });
 </script>
+
 
 
 
