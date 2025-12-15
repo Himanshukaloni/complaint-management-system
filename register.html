@@ -129,24 +129,18 @@ input, select{
 <script>
 const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
 
-// THEME TOGGLE
-document.getElementById("toggle").onclick = () => {
-  document.body.dataset.theme =
-    document.body.dataset.theme === "dark" ? "light" : "dark";
-};
-
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const first_name = document.getElementById("firstName").value.trim();
-  const last_name = document.getElementById("lastName").value.trim();
+  const firstName = document.getElementById("firstName").value.trim();
+  const lastName = document.getElementById("lastName").value.trim();
   const email = document.getElementById("email").value.trim();
   const role = document.getElementById("role").value;
   const password = document.getElementById("password").value;
   const confirm = document.getElementById("confirm").value;
 
-  if (!first_name || !last_name || !email || !password) {
-    alert("All fields are required");
+  if (!firstName || !lastName || !email || !password) {
+    alert("All fields required");
     return;
   }
 
@@ -160,30 +154,31 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        first_name,
-        last_name,
+        first_name: firstName,
+        last_name: lastName,
         email,
         password,
         role
       })
     });
 
-    const data = await res.json();
+    const text = await res.text();
 
     if (!res.ok) {
-      alert(data.message || "Registration failed");
+      alert(text);
       return;
     }
 
     alert("Registration successful");
-    window.location.href = "login.html";
+    location.href = "login.html";
 
   } catch (err) {
     console.error(err);
-    alert("Server error");
+    alert("Server unreachable");
   }
 });
 </script>
+
 
 </body>
 </html>
