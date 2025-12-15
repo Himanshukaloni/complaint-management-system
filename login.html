@@ -188,6 +188,19 @@ input:focus{box-shadow:0 12px 30px rgba(124,92,255,0.10); transform: translateY(
 
 <script>
 const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
+  const themeToggle = document.getElementById("themeToggle");
+
+// load saved theme on page load
+const savedTheme = localStorage.getItem("cms_theme") || "dark";
+document.body.setAttribute("data-theme", savedTheme);
+
+// toggle theme on click
+themeToggle.addEventListener("click", () => {
+  const current = document.body.getAttribute("data-theme");
+  const next = current === "dark" ? "light" : "dark";
+  document.body.setAttribute("data-theme", next);
+  localStorage.setItem("cms_theme", next);
+});
 
 // 🔥 Wake backend immediately (important for mobile)
 fetch(API_BASE).catch(() => {});
