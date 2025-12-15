@@ -149,33 +149,37 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     return;
   }
 
-  try {
-    const res = await fetch(`${API_BASE}/auth/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        password,
-        role
-      })
-    });
+try {
+  // 🔥 Wake backend
+  await fetch(`${API_BASE}/`);
 
-    const text = await res.text();
+  const res = await fetch(`${API_BASE}/auth/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      first_name,
+      last_name,
+      email,
+      password,
+      role
+    })
+  });
 
-    if (!res.ok) {
-      alert(text);
-      return;
-    }
+  const data = await res.json();
 
-    alert("Registration successful");
-    location.href = "login.html";
-
-  } catch (err) {
-    console.error(err);
-    alert("Server unreachable");
+  if (!res.ok) {
+    alert(data.message || "Registration failed");
+    return;
   }
+
+  alert("Registration successful");
+  location.href = "login.html";
+
+} catch (err) {
+  alert("Server unreachable (backend sleeping)");
+}
 });
 </script>
 
