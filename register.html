@@ -140,6 +140,7 @@ themeToggle.addEventListener("click", () => {
   const next = current === "dark" ? "light" : "dark";
   document.body.setAttribute("data-theme", next);
   localStorage.setItem("cms_theme", next);
+});
 
 /* 🔥 Wake backend immediately (mobile safe) */
 fetch(API_BASE).catch(() => {});
