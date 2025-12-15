@@ -8,46 +8,65 @@
 <style>
 /* ================= THEME ================= */
 :root{
-  --bg:#0f1724;
-  --card:#111827;
-  --accent:#1a825f;
-  --muted:#9aa4bf;
-  --text:#ffffff;
-  --border:rgba(255,255,255,0.1);
+  --bg-dark:#0f1724;
+  --panel-dark:#0b1220;
+  --card-dark:#0f1724;
+  --muted-dark:#9aa4bf;
+  --accent:#7c5cff;
+  --accent-2:#06b6d4;
+
+  --bg-light:#f7fafc;
+  --panel-light:#ffffff;
+  --card-light:#ffffff;
+  --muted-light:#6b7280;
+}
+
+[data-theme="dark"]{
+  --bg:var(--bg-dark);
+  --panel:var(--panel-dark);
+  --card:var(--card-dark);
+  --muted:var(--muted-dark);
 }
 [data-theme="light"]{
-  --bg:#e5e7eb;
-  --card:#ffffff;
-  --text:#000;
-  --muted:#444;
-  --border:#ddd;
+  --bg:var(--bg-light);
+  --panel:var(--panel-light);
+  --card:var(--card-light);
+  --muted:var(--muted-light);
 }
 
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box}
+html,body{height:100%}
 
 body{
+  margin:0;
   font-family:Inter,system-ui;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
+  background:
+    radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,0.06), transparent 8%),
+    radial-gradient(1000px 500px at 90% 90%, rgba(6,182,212,0.03), transparent 8%),
+    var(--bg);
+  color:var(--muted);
+  padding:28px;
+  transition:.3s;
 }
 
 /* ================= LAYOUT ================= */
 .layout{
   display:grid;
   grid-template-columns:260px 1fr;
-  min-height:100vh;
+  gap:20px;
+  min-height:calc(100vh - 56px);
 }
 
-/* ================= SIDEBAR ================= */
 aside{
-  background:linear-gradient(180deg,var(--accent),#0e5d45);
+  background:linear-gradient(180deg,var(--accent),
+    color-mix(in srgb,var(--accent) 60%, black 6%));
   padding:22px;
+  border-radius:14px;
   color:white;
 }
-aside h2{margin-bottom:20px}
+aside h2{margin-bottom:18px}
 
-nav a{
+aside nav a{
   display:block;
   padding:12px;
   border-radius:10px;
@@ -56,61 +75,83 @@ nav a{
   text-decoration:none;
   transition:.2s;
 }
-nav a:hover{
-  transform:translateX(6px);
-  background:rgba(255,255,255,.2);
+aside nav a:hover{
+  transform:translateY(-6px);
+  box-shadow:0 18px 40px rgba(0,0,0,.3);
 }
 
-/* ================= MAIN ================= */
-main{padding:24px}
+main{padding:10px}
+
+/* ================= HEADER ================= */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:18px;
+}
+header h1{
+  margin:0;
+  color:var(--accent);
+  font-size:28px;
+}
 
 /* ================= STATS ================= */
 .stats{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:22px;
-  margin-top:20px;
+  gap:16px;
+  margin-bottom:20px;
 }
+
 .stat{
-  background:linear-gradient(135deg,#111827,#0c1420);
-  padding:22px;
+  background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);
   border-radius:14px;
-  height:130px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
+  padding:22px;
+  min-height:96px;
   position:relative;
-  transition:.3s;
+  transition:.2s;
 }
 .stat::before{
   content:"";
   position:absolute;
-  left:0;
-  top:15%;
-  width:4px;
-  height:70%;
-  background:linear-gradient(to bottom,#4fc4ff,#2d79ff);
+  left:0;top:0;bottom:0;
+  width:6px;
+  border-radius:14px 0 0 14px;
+  background:linear-gradient(180deg,var(--accent),var(--accent-2));
+  transform:translateX(-6px);
+  transition:.2s;
 }
-.stat-title{opacity:.7;font-size:14px}
-.stat-number{font-size:36px;font-weight:800;margin-top:8px}
-.stat:hover{
-  transform:translateY(-6px);
-  box-shadow:0 12px 28px rgba(0,0,0,.45);
+.stat:hover{transform:translateY(-8px)}
+.stat:hover::before{transform:translateX(0)}
+
+.stat .label{font-size:13px;font-weight:600}
+.stat .value{font-size:30px;font-weight:800;margin-top:6px}
+
+.pending::before{background:linear-gradient(180deg,#f59e0b,#f97316)}
+.progress::before{background:linear-gradient(180deg,#2563eb,#60a5fa)}
+.resolved::before{background:linear-gradient(180deg,#10b981,#059669)}
+
+/* ================= CARD ================= */
+.card{
+  background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);
+  padding:18px;
+  border-radius:14px;
+  margin-bottom:18px;
 }
+.card h3{margin-top:0;color:var(--accent)}
 
 /* ================= TABLE ================= */
+.table-wrap{overflow-x:auto}
 table{
   width:100%;
   border-collapse:collapse;
-  margin-top:20px;
 }
 th,td{
   padding:12px;
-  border-bottom:1px solid var(--border);
-  font-size:14px;
+  border-bottom:1px solid rgba(255,255,255,.08);
   text-align:left;
 }
-th{color:var(--muted)}
+th{opacity:.7}
 
 /* ================= BUTTONS ================= */
 .btn{
@@ -124,256 +165,106 @@ th{color:var(--muted)}
 .btn-approve{background:#16a34a;color:white}
 .btn-reject{background:#dc2626;color:white}
 
-/* ================= STATUS SELECT ================= */
-.status-select{
-  padding:6px 14px;
+/* ================= STATUS ================= */
+select{
+  padding:6px 12px;
   border-radius:20px;
-  font-weight:600;
-  border:1px solid transparent;
-  cursor:pointer;
   background:transparent;
-}
-.status-select.pending{
-  color:#facc15;
-  border-color:#facc15;
-}
-.status-select.in_progress{
-  color:#38bdf8;
-  border-color:#38bdf8;
-}
-.status-select.resolved{
-  color:#22c55e;
-  border-color:#22c55e;
+  color:inherit;
+  border:1px solid rgba(255,255,255,.2);
 }
 
 /* ================= THEME TOGGLE ================= */
 .theme-toggle{
   position:fixed;
-  right:14px;
-  top:14px;
-  width:44px;
-  height:28px;
-  background:rgba(255,255,255,.15);
+  right:14px;top:14px;
+  width:44px;height:28px;
   border-radius:999px;
+  background:rgba(255,255,255,.08);
   padding:4px;
   cursor:pointer;
 }
 .theme-dot{
-  width:20px;
-  height:20px;
+  width:20px;height:20px;
   background:white;
   border-radius:50%;
   transition:.25s;
 }
 [data-theme="light"] .theme-dot{transform:translateX(16px)}
 
-/* ================= MODAL ================= */
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.6);
-  display:none;
-  justify-content:center;
-  align-items:center;
+/* ================= RESPONSIVE ================= */
+@media(max-width:1100px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .layout{grid-template-columns:1fr}
 }
-.modal.active{display:flex}
-.modal-box{
-  background:white;
-  color:black;
-  padding:20px;
-  width:360px;
-  border-radius:10px;
+@media(max-width:640px){
+  .stats{grid-template-columns:1fr}
 }
-.modal-box textarea{
-  width:100%;
-  height:100px;
-  margin-top:10px;
-  padding:8px;
-}
-.modal-btn{
-  margin-top:12px;
-  padding:10px 14px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-}
-.cancel{background:#ddd}
-.send{background:#16a34a;color:white}
 </style>
 </head>
 
 <body data-theme="dark">
 
-<div class="theme-toggle" id="themeToggle">
-  <div class="theme-dot"></div>
-</div>
+<div class="theme-toggle" id="themeToggle"><div class="theme-dot"></div></div>
 
 <div class="layout">
 
-<!-- SIDEBAR -->
 <aside>
   <h2>CMS Admin</h2>
   <nav>
-    <a href="#" id="navDashboard">Dashboard</a>
-    <a href="#" id="navComplaints">All Complaints</a>
-    <a href="#" id="navApprove">Approve Admins</a>
-    <a href="#" id="logout">Logout</a>
+    <a href="#" onclick="show('dashboard')">Dashboard</a>
+    <a href="#" onclick="show('complaints')">All Complaints</a>
+    <a href="#" onclick="show('approve')">Approve Admins</a>
+    <a href="#" onclick="logout()">Logout</a>
   </nav>
 </aside>
 
-<!-- MAIN -->
 <main>
+<header>
+  <h1>Admin Dashboard</h1>
+</header>
 
-<h2 style="color:var(--accent)">Admin Dashboard</h2>
+<div class="stats">
+  <div class="stat"><div class="label">Total</div><div class="value" id="statTotal">0</div></div>
+  <div class="stat pending"><div class="label">Pending</div><div class="value" id="statPending">0</div></div>
+  <div class="stat progress"><div class="label">In Progress</div><div class="value" id="statProg">0</div></div>
+  <div class="stat resolved"><div class="label">Resolved</div><div class="value" id="statRes">0</div></div>
+</div>
 
-<section id="dashboardSection">
-  <div class="stats">
-    <div class="stat"><div class="stat-title">Total</div><div class="stat-number" id="statTotal">0</div></div>
-    <div class="stat"><div class="stat-title">Pending</div><div class="stat-number" id="statPending">0</div></div>
-    <div class="stat"><div class="stat-title">In Progress</div><div class="stat-number" id="statProg">0</div></div>
-    <div class="stat"><div class="stat-title">Resolved</div><div class="stat-number" id="statRes">0</div></div>
+<section id="complaintSection" class="card">
+  <h3>All Complaints</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>ID</th><th>User</th><th>Title</th><th>Status</th><th>Action</th></tr>
+      </thead>
+      <tbody id="complaintsTable"></tbody>
+    </table>
   </div>
 </section>
 
-<section id="complaintSection" style="display:none">
-  <h3>All Complaints</h3>
-  <table>
-    <thead>
-      <tr><th>ID</th><th>Student</th><th>Title</th><th>Status</th><th>Action</th></tr>
-    </thead>
-    <tbody id="complaintsTable"></tbody>
-  </table>
-</section>
-
-<section id="approveSection" style="display:none">
+<section id="approveSection" class="card" style="display:none">
   <h3>Pending Admins</h3>
-  <table>
-    <thead><tr><th>Name</th><th>Email</th><th>Actions</th></tr></thead>
-    <tbody id="pendingTable"></tbody>
-  </table>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>Email</th><th>Action</th></tr></thead>
+      <tbody id="pendingTable"></tbody>
+    </table>
+  </div>
 </section>
 
 </main>
 </div>
 
-<!-- MODAL -->
-<div class="modal" id="replyModal">
-  <div class="modal-box">
-    <h3>Reply</h3>
-    <textarea id="replyTxt"></textarea>
-    <br>
-    <button class="modal-btn cancel" onclick="closeReply()">Cancel</button>
-    <button class="modal-btn send" onclick="sendReply()">Send</button>
-  </div>
-</div>
-
 <script>
-/* ================= CONFIG ================= */
-const API = "https://cms-backend-production-d80a.up.railway.app";
-const token = localStorage.getItem("cms_token");
-const role  = localStorage.getItem("cms_role");
-
-if(!token || role!=="admin"){location.href="login.html"}
-
-const headers = ()=>({
-  "Content-Type":"application/json",
-  "Authorization":"Bearer "+token
-});
-
-/* ================= THEME ================= */
-const theme = localStorage.getItem("cms_theme")||"dark";
-document.body.setAttribute("data-theme",theme);
+/* theme */
+const t=localStorage.getItem("cms_theme")||"dark";
+document.body.setAttribute("data-theme",t);
 themeToggle.onclick=()=>{
-  const t=document.body.getAttribute("data-theme")==="dark"?"light":"dark";
-  document.body.setAttribute("data-theme",t);
-  localStorage.setItem("cms_theme",t);
+  const n=document.body.getAttribute("data-theme")==="dark"?"light":"dark";
+  document.body.setAttribute("data-theme",n);
+  localStorage.setItem("cms_theme",n);
 };
-
-/* ================= NAV ================= */
-logout.onclick=()=>{localStorage.clear();location.href="login.html"};
-navDashboard.onclick=()=>show("dashboard");
-navComplaints.onclick=()=>{show("complaints");loadComplaints()};
-navApprove.onclick=()=>{show("approve");loadAdmins()};
-
-function show(s){
-  dashboardSection.style.display=s==="dashboard"?"block":"none";
-  complaintSection.style.display=s==="complaints"?"block":"none";
-  approveSection.style.display=s==="approve"?"block":"none";
-}
-
-/* ================= COMPLAINTS ================= */
-async function loadComplaints(){
-  const res = await fetch(API+"/admin/complaints",{headers:headers()});
-  const list = await res.json();
-  complaintsTable.innerHTML="";
-  list.forEach(c=>{
-    complaintsTable.innerHTML+=`
-    <tr>
-      <td>${c._id.slice(-6)}</td>
-      <td>${c.user_id.first_name} ${c.user_id.last_name}</td>
-      <td>${c.title}</td>
-      <td>
-        <select class="status-select ${c.status}" onchange="updateStatus('${c._id}',this.value)">
-          <option value="pending" ${c.status==="pending"?"selected":""}>Pending</option>
-          <option value="in_progress" ${c.status==="in_progress"?"selected":""}>In Progress</option>
-          <option value="resolved" ${c.status==="resolved"?"selected":""}>Resolved</option>
-        </select>
-      </td>
-      <td><button class="btn btn-reply" onclick="openReply('${c._id}')">Reply</button></td>
-    </tr>`;
-  });
-  updateStats(list);
-}
-
-function updateStats(list){
-  statTotal.textContent=list.length;
-  statPending.textContent=list.filter(x=>x.status==="pending").length;
-  statProg.textContent=list.filter(x=>x.status==="in_progress").length;
-  statRes.textContent=list.filter(x=>x.status==="resolved").length;
-}
-
-async function updateStatus(id,status){
-  await fetch(`${API}/admin/complaint-status/${id}`,{
-    method:"PUT",headers:headers(),body:JSON.stringify({status})
-  });
-}
-
-/* ================= REPLY ================= */
-let replyId=null;
-function openReply(id){replyId=id;replyModal.classList.add("active")}
-function closeReply(){replyModal.classList.remove("active")}
-async function sendReply(){
-  await fetch(`${API}/admin/complaint-reply/${replyId}`,{
-    method:"PUT",headers:headers(),body:JSON.stringify({reply:replyTxt.value})
-  });
-  replyTxt.value="";
-  closeReply();
-  loadComplaints();
-}
-
-/* ================= ADMINS ================= */
-async function loadAdmins(){
-  const res=await fetch(API+"/admin/pending-admins",{headers:headers()});
-  const list=await res.json();
-  pendingTable.innerHTML="";
-  list.forEach(u=>{
-    pendingTable.innerHTML+=`
-    <tr>
-      <td>${u.first_name} ${u.last_name}</td>
-      <td>${u.email}</td>
-      <td>
-        <button class="btn btn-approve" onclick="approve('${u._id}')">Approve</button>
-        <button class="btn btn-reject" onclick="reject('${u._id}')">Reject</button>
-      </td>
-    </tr>`;
-  });
-}
-async function approve(id){await fetch(`${API}/admin/approve-admin/${id}`,{method:"PUT",headers:headers()});loadAdmins()}
-async function reject(id){await fetch(`${API}/admin/reject-admin/${id}`,{method:"DELETE",headers:headers()});loadAdmins()}
-
-/* INIT */
-show("dashboard");
-loadComplaints();
 </script>
 
 </body>
