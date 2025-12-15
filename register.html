@@ -132,35 +132,32 @@ input, select{
 <script>
 const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
 
-/* 🔥 WAKE BACKEND */
-fetch(API_BASE).catch(() => {});
-
-/* 🌗 THEME TOGGLE (CORRECT) */
-const themeToggle = document.getElementById("themeToggle");
-
-const savedTheme = localStorage.getItem("cms_theme") || "dark";
-document.body.setAttribute("data-theme", savedTheme);
-
-themeToggle.addEventListener("click", () => {
-  const current = document.body.getAttribute("data-theme");
-  const next = current === "dark" ? "light" : "dark";
+/* 🌗 THEME */
+(function () {
+  const t = localStorage.getItem("cms_theme") || "dark";
+  document.body.setAttribute("data-theme", t);
+})();
+document.getElementById("toggle").onclick = () => {
+  const cur = document.body.getAttribute("data-theme");
+  const next = cur === "dark" ? "light" : "dark";
   document.body.setAttribute("data-theme", next);
   localStorage.setItem("cms_theme", next);
-});
+};
 
-/* 🧾 REGISTER HANDLER */
+/* 🔥 REGISTER */
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const first_name = firstName.value.trim();
-  const last_name  = lastName.value.trim();
-  const email      = email.value.trim();
-  const role       = role.value;
-  const password   = password.value;
-  const confirm    = confirm.value;
+  // ✅ DECLARE FIRST (VERY IMPORTANT)
+  const first_name = document.getElementById("firstName").value.trim();
+  const last_name  = document.getElementById("lastName").value.trim();
+  const email      = document.getElementById("email").value.trim();
+  const role       = document.getElementById("role").value;
+  const password   = document.getElementById("password").value;
+  const confirm    = document.getElementById("confirm").value;
 
-  if (!first_name || !last_name || !email || !password) {
-    alert("All fields required");
+  if (!first_name || !last_name || !email || !password || !confirm) {
+    alert("All fields are required");
     return;
   }
 
@@ -170,12 +167,16 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
   }
 
   try {
-    await fetch(API_BASE);
-
     const res = await fetch(`${API_BASE}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ first_name, last_name, email, password, role })
+      body: JSON.stringify({
+        first_name,
+        last_name,
+        email,
+        password,
+        role
+      })
     });
 
     const data = await res.json();
@@ -194,10 +195,12 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     location.href = "login.html";
 
   } catch (err) {
-    alert("Backend waking up… try again");
+    console.error(err);
+    alert("Server error. Try again.");
   }
 });
 </script>
+
 
 </body>
 </html>
