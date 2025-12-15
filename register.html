@@ -85,7 +85,10 @@ input, select{
 
 <body data-theme="dark">
 
-<div class="theme-toggle" id="toggle"><div class="theme-dot"></div></div>
+<!-- ✅ FIXED ID -->
+<div class="theme-toggle" id="themeToggle">
+  <div class="theme-dot"></div>
+</div>
 
 <div class="card">
   <h1>Create Account</h1>
@@ -195,9 +198,6 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
   }
 });
 </script>
-
-
-
 
 </body>
 </html>
