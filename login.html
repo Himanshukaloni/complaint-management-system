@@ -201,35 +201,37 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   }
 
   // ✅ REPLACED CODE HERE
-  try {
-    const res = await fetch(`${API_BASE}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
-    });
+try {
+  // 🔥 Wake backend (VERY IMPORTANT for mobile)
+  await fetch(`${API_BASE}/`);
 
-    const text = await res.text();
+  const res = await fetch(`${API_BASE}/auth/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ email, password })
+  });
 
-    if (!res.ok) {
-      alert(text);
-      return;
-    }
+  const data = await res.json();
 
-    const data = JSON.parse(text);
-
-    localStorage.setItem("cms_token", data.token);
-    localStorage.setItem("cms_role", data.user.role);
-
-    location.href =
-      data.user.role === "admin"
-        ? "admin-dashboard.html"
-        : "student-dashboard.html";
-
-  } catch (err) {
-    console.error(err);
-    alert("Server unreachable");
+  if (!res.ok) {
+    alert(data.message || "Login failed");
+    return;
   }
-});
+
+  localStorage.setItem("cms_token", data.token);
+  localStorage.setItem("cms_role", data.user.role);
+
+  location.href =
+    data.user.role === "admin"
+      ? "admin-dashboard.html"
+      : "student-dashboard.html";
+
+} catch (err) {
+  alert("Server unreachable (backend sleeping)");
+}
+
 </script>
 
 
