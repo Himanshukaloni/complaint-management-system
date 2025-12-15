@@ -127,19 +127,24 @@ input, select{
 </div>
 
 <script>
+  const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
+
+// 🔥 Wake backend (mobile safe)
+fetch(API_BASE).catch(() => {});
+
 const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
 
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const firstName = document.getElementById("firstName").value.trim();
-  const lastName = document.getElementById("lastName").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const role = document.getElementById("role").value;
-  const password = document.getElementById("password").value;
-  const confirm = document.getElementById("confirm").value;
+  const first_name = document.getElementById("firstName").value.trim();
+  const last_name  = document.getElementById("lastName").value.trim();
+  const email      = document.getElementById("email").value.trim();
+  const role       = document.getElementById("role").value;
+  const password   = document.getElementById("password").value;
+  const confirm    = document.getElementById("confirm").value;
 
-  if (!firstName || !lastName || !email || !password) {
+  if (!first_name || !last_name || !email || !password) {
     alert("All fields required");
     return;
   }
@@ -149,23 +154,44 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     return;
   }
 
-try {
-  // 🔥 Wake backend
-  await fetch(`${API_BASE}/`);
+  try {
+    // 🔥 Wake backend first (CRITICAL for mobile)
+    await fetch(API_BASE);
 
-  const res = await fetch(`${API_BASE}/auth/register`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      first_name,
-      last_name,
-      email,
-      password,
-      role
-    })
-  });
+    const res = await fetch(`${API_BASE}/auth/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        first_name,
+        last_name,
+        email,
+        password,
+        role
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message || "Registration failed");
+      return;
+    }
+
+    alert(
+      role === "admin"
+        ? "Admin registered. Wait for approval."
+        : "Registration successful"
+    );
+
+    location.href = "login.html";
+
+  } catch (err) {
+    console.error(err);
+    alert("Backend waking up… try again in 3 seconds");
+  }
+});
 
   const data = await res.json();
 
