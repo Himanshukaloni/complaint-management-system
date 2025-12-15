@@ -187,13 +187,12 @@ input:focus{box-shadow:0 12px 30px rgba(124,92,255,0.10); transform: translateY(
   </div>
 
 <script>
-  const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
-
-// 🔥 WAKE BACKEND
-fetch(API_BASE).catch(() => {});
-
 const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
 
+// 🔥 Wake backend immediately (important for mobile)
+fetch(API_BASE).catch(() => {});
+
+/* LOGIN HANDLER */
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -205,41 +204,38 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     return;
   }
 
-  // ✅ REPLACED CODE HERE
-try {
-  // Wake backend (mobile safe)
-  await fetch(API_BASE);
+  try {
+    // 🔥 Wake backend again before login
+    await fetch(API_BASE);
 
-  const res = await fetch(`${API_BASE}/auth/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ email, password })
-  });
+    const res = await fetch(`${API_BASE}/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (!res.ok) {
-    alert(data.message || "Login failed");
-    return;
+    if (!res.ok) {
+      alert(data.message || "Login failed");
+      return;
+    }
+
+    localStorage.setItem("cms_token", data.token);
+    localStorage.setItem("cms_role", data.user.role);
+
+    location.href =
+      data.user.role === "admin"
+        ? "admin-dashboard.html"
+        : "student-dashboard.html";
+
+  } catch (err) {
+    console.error(err);
+    alert("Backend waking up… try again in 3 seconds");
   }
-
-  localStorage.setItem("cms_token", data.token);
-  localStorage.setItem("cms_role", data.user.role);
-
-  location.href =
-    data.user.role === "admin"
-      ? "admin-dashboard.html"
-      : "student-dashboard.html";
-
-} catch (err) {
-  console.error(err);
-  alert("Backend waking up… try again in 3 seconds");
-}
-
 });
-
 </script>
 
 
