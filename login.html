@@ -208,12 +208,28 @@ themeToggle.addEventListener("click", () => {
 
 
 <script>
+/* ================= CONFIG ================= */
 const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
 
-// 🔥 Wake backend immediately (important for mobile)
+/* 🔥 WAKE BACKEND (mobile-safe) */
 fetch(API_BASE).catch(() => {});
 
-/* LOGIN HANDLER */
+/* ================= THEME TOGGLE ================= */
+const themeToggle = document.getElementById("themeToggle");
+
+// load saved theme
+const savedTheme = localStorage.getItem("cms_theme") || "dark";
+document.body.setAttribute("data-theme", savedTheme);
+
+// toggle theme
+themeToggle.addEventListener("click", () => {
+  const current = document.body.getAttribute("data-theme");
+  const next = current === "dark" ? "light" : "dark";
+  document.body.setAttribute("data-theme", next);
+  localStorage.setItem("cms_theme", next);
+});
+
+/* ================= LOGIN HANDLER ================= */
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -226,14 +242,12 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   }
 
   try {
-    // 🔥 Wake backend again before login
+    // wake backend again (important for Railway sleep)
     await fetch(API_BASE);
 
     const res = await fetch(`${API_BASE}/auth/login`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
     });
 
