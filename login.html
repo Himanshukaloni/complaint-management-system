@@ -185,51 +185,14 @@ input:focus{box-shadow:0 12px 30px rgba(124,92,255,0.10); transform: translateY(
 
     </div>
   </div>
-  <script>
-const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
-
-/* 🔥 WAKE BACKEND */
-fetch(API_BASE).catch(() => {});
-
-/* 🌗 THEME TOGGLE LOGIC (FIX) */
-const themeToggle = document.getElementById("themeToggle");
-
-// load saved theme
-const savedTheme = localStorage.getItem("cms_theme") || "dark";
-document.body.setAttribute("data-theme", savedTheme);
-
-// toggle on click
-themeToggle.addEventListener("click", () => {
-  const current = document.body.getAttribute("data-theme");
-  const next = current === "dark" ? "light" : "dark";
-  document.body.setAttribute("data-theme", next);
-  localStorage.setItem("cms_theme", next);
-});
-
 
 <script>
-/* ================= CONFIG ================= */
 const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
 
-/* 🔥 WAKE BACKEND (mobile-safe) */
+// 🔥 Wake backend immediately (important for mobile)
 fetch(API_BASE).catch(() => {});
 
-/* ================= THEME TOGGLE ================= */
-const themeToggle = document.getElementById("themeToggle");
-
-// load saved theme
-const savedTheme = localStorage.getItem("cms_theme") || "dark";
-document.body.setAttribute("data-theme", savedTheme);
-
-// toggle theme
-themeToggle.addEventListener("click", () => {
-  const current = document.body.getAttribute("data-theme");
-  const next = current === "dark" ? "light" : "dark";
-  document.body.setAttribute("data-theme", next);
-  localStorage.setItem("cms_theme", next);
-});
-
-/* ================= LOGIN HANDLER ================= */
+/* LOGIN HANDLER */
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -242,12 +205,14 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   }
 
   try {
-    // wake backend again (important for Railway sleep)
+    // 🔥 Wake backend again before login
     await fetch(API_BASE);
 
     const res = await fetch(`${API_BASE}/auth/login`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({ email, password })
     });
 
