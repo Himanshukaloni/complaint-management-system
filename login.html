@@ -187,6 +187,11 @@ input:focus{box-shadow:0 12px 30px rgba(124,92,255,0.10); transform: translateY(
   </div>
 
 <script>
+  const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
+
+// 🔥 WAKE BACKEND
+fetch(API_BASE).catch(() => {});
+
 const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
 
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
@@ -202,8 +207,8 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
   // ✅ REPLACED CODE HERE
 try {
-  // 🔥 Wake backend (VERY IMPORTANT for mobile)
-  await fetch(`${API_BASE}/`);
+  // Wake backend (mobile safe)
+  await fetch(API_BASE);
 
   const res = await fetch(`${API_BASE}/auth/login`, {
     method: "POST",
@@ -229,8 +234,10 @@ try {
       : "student-dashboard.html";
 
 } catch (err) {
-  alert("Server unreachable (backend sleeping)");
+  console.error(err);
+  alert("Backend waking up… try again in 3 seconds");
 }
+
 });
 
 </script>
