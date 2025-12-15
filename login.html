@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Login — CMS</title>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<style>
+:root{
+  --bg-dark:#0f1724; --panel-dark:#0b1220; --muted-dark:#9aa4bf;
+  --accent1:#5f5c6f; --accent2:#15493e;
+  --bg-light:#b2b4b8; --panel-light:#e8e2e2; --muted-light:#6b7280;
+}
+[data-theme="dark"]{ --bg:var(--bg-dark); --panel:var(--panel-dark); --muted:var(--muted-dark); }
+[data-theme="light"]{ --bg:var(--bg-light); --panel:var(--panel-light); --muted:var(--muted-light); }
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+  background:
+    radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,0.10), transparent 8%),
+    radial-gradient(1000px 500px at 90% 90%, rgba(61,214,184,0.04), transparent 8%),
+    var(--bg);
+  color:var(--muted);
+  display:flex;align-items:center;justify-content:center;padding:28px;transition:background .35s,color .25s;
+}
+
+/* Make the login card centered and large */
+.container {
+  width:100%;
+  max-width:980px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:calc(100vh - 56px); /* center vertically */
+}
+
+/* single centered card */
+.card {
+  width:100%;
+  max-width:900px;
+  display:grid;
+  grid-template-columns: 1fr;
+  border-radius:18px;
+  overflow:hidden;
+  background: linear-gradient(180deg,var(--panel), color-mix(in srgb,var(--panel) 85%, black 5%));
+  box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+  padding: 36px;
+  gap:18px;
+}
+
+/* top welcome title (big) centered */
+.hero {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  padding:4px 8px 0 8px;
+}
+
+.hero-title{
+  font-size:58px;
+  margin:0;
+  color:var(--accent1);
+  font-weight:800;
+  line-height:1;
+  letter-spacing: -1px;
+}
+
+/* individual letter spans initially hidden then fade-in */
+.hero-title span {
+  opacity: 0;
+  display:inline-block;
+  transform: translateY(10px);
+  animation: letterIn .18s forwards;
+}
+@keyframes letterIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* sub text */
+.lead { margin:6px 0 16px; color: var(--muted); font-size:15px; }
+
+/* form area centered */
+.form-wrap {
+  width:100%;
+  max-width:640px;
+  margin: 0 auto;
+  padding: 18px;
+  border-radius:12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent 40%);
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+
+/* brand row */
+.brand {
+  display:flex;
+  gap:12px;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:18px;
+}
+.logo {
+  width:56px;height:56px;border-radius:14px;
+  background:linear-gradient(135deg,var(--accent1),var(--accent2));
+  display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:18px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.4);
+}
+.brand h1 { margin:0; font-size:20px; color:var(--accent1); }
+
+/* form controls */
+label{display:block;font-weight:700;color:var(--muted);margin-bottom:8px;font-size:13px}
+input[type="email"], input[type="password"]{
+  width:100%;padding:14px;border-radius:12px;border:2px solid rgb(95, 95, 99);background:transparent;color:inherit;
+  outline:none;margin-bottom:12px;transition:box-shadow .15s, transform .12s;
+}
+input:focus{box-shadow:0 12px 30px rgba(124,92,255,0.10); transform: translateY(-2px);}
+
+/* main button */
+.btn {
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px;border-radius:12px;border:0;
+  background:linear-gradient(90deg,var(--accent1),color-mix(in srgb,var(--accent1) 60%, var(--accent2) 40%));color:white;font-weight:800;cursor:pointer;
+  width:100%; font-size:15px; box-shadow:0 12px 30px rgba(0,0,0,0.35);
+}
+
+/* small helper */
+.small{font-size:13px;color:var(--muted);text-align:center;margin-top:12px}
+
+/* theme toggle */
+.theme-toggle{
+  position:fixed;right:14px;top:14px;width:44px;height:28px;border-radius:999px;background:rgba(255,255,255,0.06);display:flex;align-items:center;padding:4px;cursor:pointer;z-index:9999;
+  box-shadow:0 6px 18px rgba(0,0,0,0.25);
+}
+.theme-dot{width:20px;height:20px;border-radius:50%;background:white;transition:transform .25s}
+[data-theme="light"] .theme-dot{transform:translateX(16px)}
+
+/* responsive */
+@media (max-width:880px){
+  .hero-title{font-size:40px}
+  .card{padding:24px}
+  .form-wrap{padding:14px}
+}
+</style>
+</head>
+<body data-theme="dark">
+
+  <!-- theme toggle -->
+  <div class="theme-toggle" id="themeToggle" title="Toggle theme">
+    <div class="theme-dot"></div>
+  </div>
+
+  <div class="container">
+    <div class="card" role="main" aria-labelledby="welcome-heading">
+
+      <!-- Welcome title (centered over the login area) -->
+      <div class="hero" id="welcomeBlock">
+        <div class="hero-title" id="welcomeTitle" aria-hidden="false">
+          <!-- letters will be inserted by script for clean animation -->
+        </div>
+        <div class="lead">Fast, modern CMS portal — sign in below</div>
+      </div>
+
+      <!-- Form area (centered) -->
+      <div class="form-wrap" role="form" aria-labelledby="welcome-heading">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">CMS</div>
+          <h1>Complaint Management System</h1>
+        </div>
+
+        <form id="loginForm" autocomplete="off" novalidate>
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="you@example.com" required>
+
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="Your password" required>
+
+          <button class="btn" type="submit">Sign in →</button>
+        </form>
+
+        <div class="small">Don't have an account? <a href="register.html" style="color:var(--accent2)">Create one</a></div>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+const API = "https://cms-backend-production-d80a.up.railway.app";
+
+/* THEME RESTORE */
+(function(){
+  const t = localStorage.getItem("cms_theme") || "dark";
+  document.body.setAttribute("data-theme", t);
+})();
+
+themeToggle.onclick = () => {
+  const cur = document.body.getAttribute("data-theme");
+  const next = cur === "dark" ? "light" : "dark";
+  document.body.setAttribute("data-theme", next);
+  localStorage.setItem("cms_theme", next);
+};
+
+/* LOGIN */
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    alert("All fields required");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message || "Login failed");
+      return;
+    }
+
+    // SAVE AUTH
+    localStorage.setItem("cms_token", data.token);
+    localStorage.setItem("cms_role", data.user.role);
+
+    // REDIRECT
+    location.href =
+      data.user.role === "admin"
+        ? "admin-dashboard.html"
+        : "student-dashboard.html";
+
+  } catch (err) {
+    alert("Server error");
+    console.error(err);
+  }
+});
+</script>
+
+</body>
+</html>

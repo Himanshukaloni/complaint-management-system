@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Register — CMS</title>
+
+<style>
+:root{
+  --bg-dark:#151b24; --card-dark:#303235; --muted-dark:#c3c4c7;
+  --accent1:#5f5c6f; --accent2:#5f5c6f;
+  --bg-light:#bac0cc; --card-light:#d5d7df; --muted-light:#6a717e;
+}
+[data-theme="dark"]{ --bg:var(--bg-dark); --card:var(--card-dark); --muted:var(--muted-dark); }
+[data-theme="light"]{ --bg:var(--bg-light); --card:var(--card-light); --muted:var(--muted-light); }
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--muted);
+  font-family:Inter, system-ui;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.card{
+  width:100%;
+  max-width:500px;
+  background:linear-gradient(180deg, var(--card), rgba(0,0,0,0.03));
+  padding:32px;
+  border-radius:20px;
+  box-shadow:0 15px 40px rgba(1,1,1,0.35);
+}
+
+h1{
+  margin:0 0 10px;
+  color:var(--accent1);
+  text-align:center;
+}
+
+label{margin-top:10px; display:block; font-weight:600;}
+input, select{
+  width:100%;
+  padding:8.5px;
+  margin-top:6px;
+  border-radius:12px;
+  background:#d1d1d1;
+  color:#000;
+  border:1px solid rgb(96,85,85);
+}
+
+.btn{
+  width:100%;
+  margin-top:18px;
+  padding:14px;
+  border:0;
+  border-radius:12px;
+  background:linear-gradient(90deg,var(--accent1),var(--accent2));
+  color:#000;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.theme-toggle{
+  position:fixed;
+  right:18px; top:18px;
+  width:46px; height:28px;
+  border-radius:50px;
+  background:rgba(255,255,255,0.15);
+  padding:4px;
+  cursor:pointer;
+}
+.theme-dot{
+  width:20px; height:20px;
+  border-radius:50%;
+  background:white;
+  transition:.25s;
+}
+[data-theme="light"] .theme-dot{ transform:translateX(18px); }
+</style>
+</head>
+
+<body data-theme="dark">
+
+<div class="theme-toggle" id="toggle"><div class="theme-dot"></div></div>
+
+<div class="card">
+  <h1>Create Account</h1>
+
+  <form id="registerForm" autocomplete="off">
+    <div style="display:flex; gap:20px;">
+      <div style="flex:1">
+        <label>First Name</label>
+        <input id="firstName" required>
+      </div>
+      <div style="flex:1">
+        <label>Last Name</label>
+        <input id="lastName" required>
+      </div>
+    </div>
+
+    <label>Email</label>
+    <input id="email" type="email" required>
+
+    <label>Role</label>
+    <select id="role" required>
+      <option value="student">Student</option>
+      <option value="admin">Administrator</option>
+    </select>
+
+    <label>Password</label>
+    <input id="password" type="password" required>
+
+    <label>Confirm Password</label>
+    <input id="confirm" type="password" required>
+
+    <button class="btn" type="submit">Create Account</button>
+  </form>
+
+  <p style="margin-top:15px; text-align:center;">
+    Already have an account?
+    <a href="login.html" style="color:var(--accent2)">Sign in</a>
+  </p>
+</div>
+
+<script>
+const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
+
+// THEME TOGGLE
+document.getElementById("toggle").onclick = () => {
+  document.body.dataset.theme =
+    document.body.dataset.theme === "dark" ? "light" : "dark";
+};
+
+document.getElementById("registerForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const first_name = document.getElementById("firstName").value.trim();
+  const last_name = document.getElementById("lastName").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const role = document.getElementById("role").value;
+  const password = document.getElementById("password").value;
+  const confirm = document.getElementById("confirm").value;
+
+  if (!first_name || !last_name || !email || !password) {
+    alert("All fields are required");
+    return;
+  }
+
+  if (password !== confirm) {
+    alert("Passwords do not match");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        first_name,
+        last_name,
+        email,
+        password,
+        role
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message || "Registration failed");
+      return;
+    }
+
+    alert("Registration successful");
+    window.location.href = "login.html";
+
+  } catch (err) {
+    console.error(err);
+    alert("Server error");
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Student — Dashboard</title>
+<style>
+  :root{
+    --bg-dark:#0f1724;
+    --panel-dark:#0b1220;
+    --card-dark:#0f1724;
+    --muted-dark:#9aa4bf;
+    --accent:#7c5cff;
+    --accent-2:#06b6d4;
+
+    --bg-light:#f7fafc;
+    --panel-light:#ffffff;
+    --card-light:#ffffff;
+    --muted-light:#6b7280;
+    --accent-light:#188a66;
+  }
+
+  [data-theme="dark"]{
+    --bg:var(--bg-dark);
+    --panel:var(--panel-dark);
+    --card:var(--card-dark);
+    --muted:var(--muted-dark);
+  }
+
+  [data-theme="light"]{
+    --bg:var(--bg-light);
+    --panel:var(--panel-light);
+    --card:var(--card-light);
+    --muted:var(--muted-light);
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+    background: radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,0.06), transparent 8%),
+                radial-gradient(1000px 500px at 90% 90%, rgba(6,182,212,0.03), transparent 8%),
+                var(--bg);
+    color:var(--muted);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    padding:28px;
+    transition: background .3s, color .25s;
+  }
+
+  /* layout */
+  .layout{display:grid;grid-template-columns:260px 1fr;gap:20px;min-height:calc(100vh - 56px)}
+  aside{
+    background: linear-gradient(180deg, var(--accent), color-mix(in srgb, var(--accent) 60%, black 6%));
+    padding:22px;color:#fff;border-radius:12px;
+  }
+  aside .logo{font-weight:800;font-size:18px;margin-bottom:16px}
+  aside nav a{display:block;color:rgba(255,255,255,0.95);padding:12px;border-radius:10px;margin-bottom:8px;text-decoration:none;transition:transform .18s,box-shadow .18s}
+  aside nav a:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(0,0,0,0.3)}
+
+  main{padding:28px}
+  header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:18px}
+  header h1{margin:0;color:var(--accent);font-size:28px}
+  header p{margin:4px 0 0;color:var(--muted)}
+
+  /* stats grid like admin, but more visual */
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+    margin-bottom:18px;
+  }
+
+  .stat{
+    border-radius:14px;
+    padding:22px;
+    min-height:96px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    transition:transform .18s, box-shadow .18s, background .18s;
+    cursor:default;
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* default card appearance for dark & light */
+  [data-theme="dark"] .stat{
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    color: #f8fafc;
+    box-shadow: 0 10px 30px rgba(2,6,23,0.5);
+  }
+  [data-theme="light"] .stat{
+    background: linear-gradient(180deg, #ffffff, #f3f4f6);
+    color: #111827;
+    box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+  }
+
+  /* accent accentuation (small left stripe) */
+  .stat::before{
+    content:"";
+    position:absolute;
+    left:0;top:0;bottom:0;
+    width:6px;
+    border-top-left-radius:14px;
+    border-bottom-left-radius:14px;
+    background: linear-gradient(180deg, var(--accent), var(--accent-2));
+    transform:translateX(-6px);
+    transition:transform .2s;
+  }
+
+  .stat:hover{ transform:translateY(-8px); }
+  .stat:hover::before{ transform:translateX(0); }
+
+  .stat .label{font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:600}
+  .stat .value{font-size:28px;font-weight:800;color:inherit}
+
+  /* special color variants (optional) */
+  .stat.pending::before{ background: linear-gradient(180deg, #f59e0b, #f97316); }
+  .stat.progress::before{ background: linear-gradient(180deg, #2563eb, #60a5fa); }
+  .stat.resolved::before{ background: linear-gradient(180deg, #10b981, #059669); }
+
+  /* container cards below */
+  .card{background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent); padding:18px;border-radius:12px}
+  .card h3{margin-top:0;color:var(--accent)}
+  .complaint-list{margin-top:12px}
+
+  /* responsive */
+  @media (max-width:1100px){ .stats{grid-template-columns:repeat(2,1fr)} .layout{grid-template-columns:1fr} }
+  @media (max-width:640px){ .stats{grid-template-columns:1fr} header{flex-direction:column;align-items:flex-start} }
+
+  /* theme toggle floating small button */
+  .theme-toggle{
+    position:fixed;right:14px;top:14px;width:44px;height:28px;border-radius:999px;background:rgba(255,255,255,0.06);display:flex;align-items:center;padding:4px;cursor:pointer;z-index:9999;
+    box-shadow:0 6px 18px rgba(0,0,0,0.25);
+  }
+  .theme-dot{width:20px;height:20px;border-radius:50%;background:white;transition:transform .25s}
+  [data-theme="light"] .theme-dot{transform:translateX(16px)}
+</style>
+</head>
+<body data-theme="dark">
+  <div class="theme-toggle" id="themeToggle"><div class="theme-dot"></div></div>
+
+  <div class="layout">
+    <aside>
+      <div class="logo">CMS Student</div>
+      <nav>
+        <a href="#" id="navHome">Home</a>
+        <a href="#" id="navSubmit">Submit Complaint</a>
+        <a href="#" id="navMy">My Complaints</a>
+        <a href="#" id="logoutBtn">Logout</a>
+      </nav>
+    </aside>
+
+    <main>
+      <header>
+        <div>
+          <h1>Dashboard</h1>
+          <p>Welcome back — track your complaints</p>
+        </div>
+        <div id="userInfo"></div>
+      </header>
+
+      <!-- stats -->
+      <div class="stats" aria-live="polite">
+        <div class="stat total">
+          <div class="label">Total Complaints</div>
+          <div class="value" id="statTotal">0</div>
+        </div>
+        <div class="stat pending">
+          <div class="label">Pending</div>
+          <div class="value" id="statPending">0</div>
+        </div>
+        <div class="stat progress">
+          <div class="label">In Progress</div>
+          <div class="value" id="statProg">0</div>
+        </div>
+        <div class="stat resolved">
+          <div class="label">Resolved</div>
+          <div class="value" id="statRes">0</div>
+        </div>
+      </div>
+
+      <!-- main content -->
+      <section class="card" id="homeSection">
+        <h3>Welcome Back</h3>
+        <p>You can submit complaints and track replies here. Use the left menu to submit a new complaint or check your complaint history.</p>
+      </section>
+
+      <section class="card" id="submitSection" style="display:none;margin-top:14px">
+        <h3>Submit Complaint</h3>
+        <form id="complaintForm">
+          <label>Title</label>
+          <input id="cTitle" required style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);margin-top:8px">
+          <label style="margin-top:8px">Category</label>
+          <select id="cCategory" style="width:100%;padding:10px;border-radius:8px;margin-top:8px">
+            <option value="">Select</option><option value="facility">Facility</option><option value="academic">Academic</option><option value="other">Other</option>
+          </select>
+          <label style="margin-top:8px">Description</label>
+          <textarea id="cDesc" rows="5" style="width:100%;padding:10px;border-radius:8px;margin-top:8px"></textarea>
+          <div style="margin-top:12px"><button id="submitBtn" class="btn" type="submit">Submit Complaint</button></div>
+        </form>
+      </section>
+
+      <section class="card" id="mySection" style="display:none;margin-top:14px">
+        <h3>My Complaints</h3>
+        <div id="myList" class="complaint-list">Loading...</div>
+      </section>
+    </main>
+  </div>
+
+<script>
+const API = "https://cms-backend-production-d80a.up.railway.app";
+const token = localStorage.getItem("cms_token");
+const role  = localStorage.getItem("cms_role");
+
+/* AUTH GUARD */
+if (!token || role !== "student") {
+  location.href = "login.html";
+}
+
+/* THEME */
+(function(){
+  const t = localStorage.getItem("cms_theme") || "dark";
+  document.body.setAttribute("data-theme", t);
+})();
+document.getElementById("themeToggle").onclick = () => {
+  const cur = document.body.getAttribute("data-theme");
+  const next = cur === "dark" ? "light" : "dark";
+  document.body.setAttribute("data-theme", next);
+  localStorage.setItem("cms_theme", next);
+};
+
+/* NAV */
+logoutBtn.onclick = () => {
+  localStorage.clear();
+  location.href = "login.html";
+};
+
+function show(sec){
+  homeSection.style.display   = sec==="home"?"block":"none";
+  submitSection.style.display = sec==="submit"?"block":"none";
+  mySection.style.display     = sec==="my"?"block":"none";
+}
+
+navHome.onclick   = ()=>show("home");
+navSubmit.onclick = ()=>show("submit");
+navMy.onclick     = async ()=>{ await loadMy(); show("my"); };
+
+const headers = () => ({
+  "Content-Type":"application/json",
+  "Authorization":"Bearer " + token
+});
+
+/* LOAD STATS */
+async function loadStats(){
+  const res = await fetch(`${API}/complaints/my`,{ headers:headers() });
+  const list = await res.json();
+
+  statTotal.textContent   = list.length;
+  statPending.textContent = list.filter(x=>x.status==="pending").length;
+  statProg.textContent    = list.filter(x=>x.status==="progress").length;
+  statRes.textContent     = list.filter(x=>x.status==="resolved").length;
+}
+
+/* LOAD MY COMPLAINTS */
+async function loadMy(){
+  const res = await fetch(`${API}/complaints/my`,{ headers:headers() });
+  const list = await res.json();
+  myList.innerHTML = "";
+
+  if(!list.length){
+    myList.innerHTML = "<p>No complaints yet.</p>";
+    return;
+  }
+
+  list.forEach(c=>{
+    myList.innerHTML += `
+      <div style="padding:12px;border-bottom:1px solid rgba(255,255,255,.05)">
+        <b>${c.title}</b>
+        <div style="font-size:13px">${c.status} • ${new Date(c.createdAt).toLocaleString()}</div>
+        ${c.admin_reply ? `<em>Reply: ${c.admin_reply}</em>` : ""}
+      </div>`;
+  });
+}
+
+/* SUBMIT */
+complaintForm.onsubmit = async e => {
+  e.preventDefault();
+  await fetch(`${API}/complaints/submit`,{
+    method:"POST",
+    headers:headers(),
+    body:JSON.stringify({
+      title:cTitle.value,
+      category:cCategory.value,
+      description:cDesc.value
+    })
+  });
+  complaintForm.reset();
+  await loadStats();
+  show("my");
+};
+
+/* INIT */
+loadStats();
+</script>
+
+</body>
+</html>
