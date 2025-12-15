@@ -127,13 +127,12 @@ input, select{
 </div>
 
 <script>
-  const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
-
-// 🔥 Wake backend (mobile safe)
-fetch(API_BASE).catch(() => {});
-
 const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
 
+/* 🔥 Wake backend immediately (mobile safe) */
+fetch(API_BASE).catch(() => {});
+
+/* REGISTER HANDLER */
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -155,7 +154,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
   }
 
   try {
-    // 🔥 Wake backend first (CRITICAL for mobile)
+    // 🔥 Wake backend again (important for Railway sleep)
     await fetch(API_BASE);
 
     const res = await fetch(`${API_BASE}/auth/register`, {
@@ -192,22 +191,8 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     alert("Backend waking up… try again in 3 seconds");
   }
 });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    alert(data.message || "Registration failed");
-    return;
-  }
-
-  alert("Registration successful");
-  location.href = "login.html";
-
-} catch (err) {
-  alert("Server unreachable (backend sleeping)");
-}
-});
 </script>
+
 
 
 </body>
