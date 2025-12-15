@@ -185,6 +185,27 @@ input:focus{box-shadow:0 12px 30px rgba(124,92,255,0.10); transform: translateY(
 
     </div>
   </div>
+  <script>
+const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
+
+/* 🔥 WAKE BACKEND */
+fetch(API_BASE).catch(() => {});
+
+/* 🌗 THEME TOGGLE LOGIC (FIX) */
+const themeToggle = document.getElementById("themeToggle");
+
+// load saved theme
+const savedTheme = localStorage.getItem("cms_theme") || "dark";
+document.body.setAttribute("data-theme", savedTheme);
+
+// toggle on click
+themeToggle.addEventListener("click", () => {
+  const current = document.body.getAttribute("data-theme");
+  const next = current === "dark" ? "light" : "dark";
+  document.body.setAttribute("data-theme", next);
+  localStorage.setItem("cms_theme", next);
+});
+
 
 <script>
 const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
