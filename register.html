@@ -132,23 +132,28 @@ input, select{
 <script>
 const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
 
-/* 🌗 THEME */
-(function () {
-  const t = localStorage.getItem("cms_theme") || "dark";
-  document.body.setAttribute("data-theme", t);
-})();
-document.getElementById("toggle").onclick = () => {
-  const cur = document.body.getAttribute("data-theme");
-  const next = cur === "dark" ? "light" : "dark";
+/* ================= THEME TOGGLE ================= */
+const themeToggle = document.getElementById("themeToggle");
+
+// load saved theme
+const savedTheme = localStorage.getItem("cms_theme") || "dark";
+document.body.setAttribute("data-theme", savedTheme);
+
+// toggle theme
+themeToggle.addEventListener("click", () => {
+  const current = document.body.getAttribute("data-theme");
+  const next = current === "dark" ? "light" : "dark";
   document.body.setAttribute("data-theme", next);
   localStorage.setItem("cms_theme", next);
-};
+});
 
-/* 🔥 REGISTER */
+/* ================= WAKE BACKEND ================= */
+fetch(API_BASE).catch(() => {});
+
+/* ================= REGISTER HANDLER ================= */
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  // ✅ DECLARE FIRST (VERY IMPORTANT)
   const first_name = document.getElementById("firstName").value.trim();
   const last_name  = document.getElementById("lastName").value.trim();
   const email      = document.getElementById("email").value.trim();
@@ -156,8 +161,8 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
   const password   = document.getElementById("password").value;
   const confirm    = document.getElementById("confirm").value;
 
-  if (!first_name || !last_name || !email || !password || !confirm) {
-    alert("All fields are required");
+  if (!first_name || !last_name || !email || !password) {
+    alert("All fields required");
     return;
   }
 
@@ -167,6 +172,8 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
   }
 
   try {
+    await fetch(API_BASE); // wake railway
+
     const res = await fetch(`${API_BASE}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -196,7 +203,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
 
   } catch (err) {
     console.error(err);
-    alert("Server error. Try again.");
+    alert("Backend waking up… try again");
   }
 });
 </script>
