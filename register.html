@@ -130,17 +130,16 @@ input, select{
 const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
   const themeToggle = document.getElementById("themeToggle");
 
-// load saved theme on page load
+// load saved theme
 const savedTheme = localStorage.getItem("cms_theme") || "dark";
 document.body.setAttribute("data-theme", savedTheme);
 
-// toggle theme on click
+// toggle theme
 themeToggle.addEventListener("click", () => {
   const current = document.body.getAttribute("data-theme");
   const next = current === "dark" ? "light" : "dark";
   document.body.setAttribute("data-theme", next);
   localStorage.setItem("cms_theme", next);
-});
 
 /* 🔥 Wake backend immediately (mobile safe) */
 fetch(API_BASE).catch(() => {});
