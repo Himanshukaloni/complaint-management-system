@@ -187,22 +187,8 @@ input:focus{box-shadow:0 12px 30px rgba(124,92,255,0.10); transform: translateY(
   </div>
 
 <script>
-const API = "https://cms-backend-production-d80a.up.railway.app";
+const API_BASE = "https://cms-backend-production-d80a.up.railway.app";
 
-/* THEME RESTORE */
-(function(){
-  const t = localStorage.getItem("cms_theme") || "dark";
-  document.body.setAttribute("data-theme", t);
-})();
-
-themeToggle.onclick = () => {
-  const cur = document.body.getAttribute("data-theme");
-  const next = cur === "dark" ? "light" : "dark";
-  document.body.setAttribute("data-theme", next);
-  localStorage.setItem("cms_theme", next);
-};
-
-/* LOGIN */
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -210,40 +196,42 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   const password = document.getElementById("password").value;
 
   if (!email || !password) {
-    alert("All fields required");
+    alert("Email and password required");
     return;
   }
 
+  // ✅ REPLACED CODE HERE
   try {
-    const res = await fetch(`${API}/auth/login`, {
+    const res = await fetch(`${API_BASE}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
     });
 
-    const data = await res.json();
+    const text = await res.text();
 
     if (!res.ok) {
-      alert(data.message || "Login failed");
+      alert(text);
       return;
     }
 
-    // SAVE AUTH
+    const data = JSON.parse(text);
+
     localStorage.setItem("cms_token", data.token);
     localStorage.setItem("cms_role", data.user.role);
 
-    // REDIRECT
     location.href =
       data.user.role === "admin"
         ? "admin-dashboard.html"
         : "student-dashboard.html";
 
   } catch (err) {
-    alert("Server error");
     console.error(err);
+    alert("Server unreachable");
   }
 });
 </script>
+
 
 </body>
 </html>
