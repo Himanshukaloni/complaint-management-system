@@ -32,15 +32,6 @@
   --card:var(--card-light);
   --muted:var(--muted-light);
 }
-  .stat .value {
-  font-size: 30px;
-  font-weight: 800;
-  color: #ffffff;
-}
-[data-theme="light"] .stat .value {
-  color: #065f46;   /* dark green (visible on white) */
-}
-
 
 *{box-sizing:border-box}
 body{
@@ -97,6 +88,7 @@ main{padding:10px}
 }
 .stat .label{font-size:13px;color:var(--muted)}
 .stat .value{font-size:30px;font-weight:800;color:#fff}
+[data-theme="light"] .stat .value{color:#065f46}
 
 /* TABLE */
 .card{
@@ -118,6 +110,7 @@ th{color:var(--muted)}
 /* BUTTONS */
 .btn{padding:6px 12px;border:none;border-radius:8px;font-weight:600;cursor:pointer}
 .btn-reply{background:#22c55e;color:#fff}
+.btn-view{background:#2563eb;color:#fff}
 .btn-approve{background:#16a34a;color:#fff}
 .btn-reject{background:#dc2626;color:#fff}
 
@@ -137,7 +130,9 @@ select{padding:6px 12px;border-radius:20px;background:transparent;color:inherit}
   background:#fff;color:#000;
   padding:20px;
   border-radius:12px;
-  width:360px;
+  width:380px;
+  max-height:80vh;
+  overflow:auto;
 }
 
 /* TOGGLE */
@@ -194,7 +189,14 @@ select{padding:6px 12px;border-radius:20px;background:transparent;color:inherit}
     <h3>All Complaints</h3>
     <table>
       <thead>
-        <tr><th>ID</th><th>Student</th><th>Title</th><th>Status</th><th>Action</th></tr>
+        <tr>
+          <th>ID</th>
+          <th>Student</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
       </thead>
       <tbody id="complaintsTable"></tbody>
     </table>
@@ -210,13 +212,22 @@ select{padding:6px 12px;border-radius:20px;background:transparent;color:inherit}
 </main>
 </div>
 
+<!-- REPLY MODAL -->
 <div class="modal" id="replyModal">
   <div class="modal-box">
     <h3>Reply</h3>
-    <textarea id="replyTxt" style="width:100%;height:90px"></textarea>
-    <br><br>
+    <textarea id="replyTxt" style="width:100%;height:90px"></textarea><br><br>
     <button onclick="closeReply()">Cancel</button>
     <button class="btn btn-reply" onclick="sendReply()">Send</button>
+  </div>
+</div>
+
+<!-- DESCRIPTION MODAL -->
+<div class="modal" id="descModal">
+  <div class="modal-box">
+    <h3>Complaint Description</h3>
+    <p id="descText" style="white-space:pre-wrap;margin-top:10px"></p><br>
+    <button onclick="closeDesc()">Close</button>
   </div>
 </div>
 
@@ -255,6 +266,7 @@ async function loadComplaints(){
   const res=await fetch(API+"/admin/complaints",{headers:headers()});
   const list=await res.json();
   complaintsTable.innerHTML="";
+
   list.forEach(c=>{
     complaintsTable.innerHTML+=`
     <tr>
@@ -262,15 +274,24 @@ async function loadComplaints(){
       <td>${c.user_id?`${c.user_id.first_name} ${c.user_id.last_name}`:"Unknown"}</td>
       <td>${c.title}</td>
       <td>
+        <button class="btn btn-view"
+          onclick="openDesc(${JSON.stringify(c.description || 'No description')})">
+          View
+        </button>
+      </td>
+      <td>
         <select onchange="updateStatus('${c._id}',this.value)">
-          <option ${c.status==="pending"?"selected":""}>pending</option>
-          <option ${c.status==="in_progress"?"selected":""}>in_progress</option>
-          <option ${c.status==="resolved"?"selected":""}>resolved</option>
+          <option value="pending" ${c.status==="pending"?"selected":""}>Pending</option>
+          <option value="in_progress" ${c.status==="in_progress"?"selected":""}>In Progress</option>
+          <option value="resolved" ${c.status==="resolved"?"selected":""}>Resolved</option>
         </select>
       </td>
-      <td><button class="btn btn-reply" onclick="openReply('${c._id}')">Reply</button></td>
+      <td>
+        <button class="btn btn-reply" onclick="openReply('${c._id}')">Reply</button>
+      </td>
     </tr>`;
   });
+
   updateStats(list);
 }
 
@@ -285,6 +306,15 @@ async function updateStatus(id,status){
   await fetch(`${API}/admin/complaint-status/${id}`,{
     method:"PUT",headers:headers(),body:JSON.stringify({status})
   });
+}
+
+/* DESCRIPTION */
+function openDesc(text){
+  descText.textContent=text;
+  descModal.classList.add("active");
+}
+function closeDesc(){
+  descModal.classList.remove("active");
 }
 
 /* REPLY */
