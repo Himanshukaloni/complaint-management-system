@@ -263,37 +263,50 @@ function show(sec){
 
 /* LOAD COMPLAINTS */
 async function loadComplaints(){
-  const res=await fetch(API+"/admin/complaints",{headers:headers()});
-  const list=await res.json();
-  complaintsTable.innerHTML="";
+  const res = await fetch(API + "/admin/complaints", { headers: headers() });
+  const list = await res.json();
 
-  list.forEach(c=>{
-    complaintsTable.innerHTML+=`
-    <tr>
-      <td>${c._id.slice(-6)}</td>
-      <td>${c.user_id?`${c.user_id.first_name} ${c.user_id.last_name}`:"Unknown"}</td>
-      <td>${c.title}</td>
-      <td>
-        <button class="btn btn-view"
-          onclick="openDesc(${JSON.stringify(c.description || 'No description')})">
-          View
-        </button>
-      </td>
-      <td>
-        <select onchange="updateStatus('${c._id}',this.value)">
-          <option value="pending" ${c.status==="pending"?"selected":""}>Pending</option>
-          <option value="in_progress" ${c.status==="in_progress"?"selected":""}>In Progress</option>
-          <option value="resolved" ${c.status==="resolved"?"selected":""}>Resolved</option>
-        </select>
-      </td>
-      <td>
-        <button class="btn btn-reply" onclick="openReply('${c._id}')">Reply</button>
-      </td>
-    </tr>`;
+  complaintsTable.innerHTML = "";
+  complaintCache = {}; // reset cache
+
+  list.forEach(c => {
+    // cache description safely
+    complaintCache[c._id] = c.description || "No description provided";
+
+    complaintsTable.innerHTML += `
+      <tr>
+        <td>${c._id.slice(-6)}</td>
+        <td>${c.user_id ? `${c.user_id.first_name} ${c.user_id.last_name}` : "Unknown"}</td>
+        <td>${c.title}</td>
+
+        <td>
+          <button class="btn btn-view"
+            onclick="openDesc('${c._id}')">
+            View
+          </button>
+        </td>
+
+        <td>
+          <select onchange="updateStatus('${c._id}', this.value)">
+            <option value="pending" ${c.status==="pending"?"selected":""}>Pending</option>
+            <option value="in_progress" ${c.status==="in_progress"?"selected":""}>In Progress</option>
+            <option value="resolved" ${c.status==="resolved"?"selected":""}>Resolved</option>
+          </select>
+        </td>
+
+        <td>
+          <button class="btn btn-reply"
+            onclick="openReply('${c._id}')">
+            Reply
+          </button>
+        </td>
+      </tr>
+    `;
   });
 
   updateStats(list);
 }
+
 
 function updateStats(list){
   statTotal.textContent=list.length;
@@ -309,13 +322,15 @@ async function updateStatus(id,status){
 }
 
 /* DESCRIPTION */
-function openDesc(text){
-  descText.textContent=text;
+function openDesc(id){
+  descText.textContent = complaintCache[id] || "No description found";
   descModal.classList.add("active");
 }
+
 function closeDesc(){
   descModal.classList.remove("active");
 }
+
 
 /* REPLY */
 let replyId=null;
