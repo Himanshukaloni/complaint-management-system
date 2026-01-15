@@ -24,7 +24,7 @@ Server-side logic for request handling
 
 Database
 
-MySQL (for storing user and complaint data)
+MongoDB (for storing user and complaint data)
 
 Tools
 
@@ -96,8 +96,6 @@ Hands-on experience in Full Stack Development
 
 Strong understanding of frontend-backend interaction
 
-Improved skills in Java fundamentals and OOP concepts
-
 Practical exposure to database integration
 
 Experience in building a real-world problem-solving application
@@ -106,13 +104,9 @@ Experience in building a real-world problem-solving application
 
 Role-based access control
 
-Email notifications for complaint updates
-
 Advanced search and filtering
 
 Authentication & authorization improvements
-
-UI enhancements using modern frameworks
 
 📸 Screenshots
 
