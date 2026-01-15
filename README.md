@@ -56,13 +56,38 @@ Update complaint status
 Manage complaint resolution process
 
 📂 Project Structure
+
 frontent
 CMS/
 │── index.html
 │── login.html
 │── register.html
-│── dashboard.html
-CMS Backend/
+└── dashboard.html
+
+backend
+cms-backend/
+│
+├── middleware/
+│   ├── auth.js
+│   └── errorHandler.js
+│
+├── models/
+│   ├── User.js
+│   └── Complaint.js
+│
+├── routes/
+│   ├── authRoutes.js
+│   ├── userRoutes.js
+│   └── complaintRoutes.js
+│
+├── db.js
+├── server.js
+├── package.json
+├── package-lock.json
+└── README.md
+
+CMS-BACKEND Repo(https://github.com/Himanshukaloni/cms-backend)
+
 
 
 🧠 Learning Outcomes
