@@ -1,4 +1,4 @@
-<img width="1775" height="923" alt="Screenshot 2025-12-12 110728" src="https://github.com/user-attachments/assets/a4fd400c-6a58-4a24-b6da-1b704d4a37ef" />📌 Complaint Management System (CMS)
+ Complaint Management System (CMS)
 
 A full stack web application designed to efficiently manage and track complaints submitted by users. The system provides a structured workflow for complaint registration, monitoring, and resolution, ensuring transparency and improved user experience.
 
@@ -18,7 +18,7 @@ JavaScript
 
 Backend
 
-Java (Core Java fundamentals)
+Nodejs 
 
 Server-side logic for request handling
 
@@ -102,9 +102,9 @@ UI enhancements using modern frameworks
 
 Himanshu Kaloni
 
-GitHub: https://github.com/yourusername
+GitHub: https://github.com/himanshukaloni
 
-Portfolio: https://your-portfolio-link
+Portfolio: https://github.com/portfolio
 
 📄 License
 
