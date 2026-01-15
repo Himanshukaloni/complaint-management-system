@@ -104,7 +104,7 @@ Himanshu Kaloni
 
 GitHub: https://github.com/himanshukaloni
 
-Portfolio: https://github.com/himanshukaloni/portfolio
+Portfolio: https://himanshukaloni.github.io/portfolio/
 
 📄 License
 
