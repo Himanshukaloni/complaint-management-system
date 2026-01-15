@@ -56,11 +56,14 @@ Update complaint status
 Manage complaint resolution process
 
 📂 Project Structure
+frontent
 CMS/
 │── index.html
 │── login.html
 │── register.html
 │── dashboard.html
+CMS Backend/
+
 
 🧠 Learning Outcomes
 
